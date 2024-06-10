@@ -1,0 +1,13 @@
+FROM debian:bookworm-slim as build
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    curl \
+    xz-utils \
+    ca-certificates && \
+    update-ca-certificates
+#TODO: Extract cmds from install.sh
+RUN curl https://wasmtime.dev/install.sh -sSf | bash
+
+FROM debian:bookworm-slim 
+COPY --from=build /root/.wasmtime/bin/wasmtime /wasmtime
